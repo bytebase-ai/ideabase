@@ -2,10 +2,10 @@ mod controller;
 pub mod global;
 pub mod service;
 
-use common::log::init_tk_log;
-use common::yaml::{load_env_yaml, GlobalEnv};
-use database::{init_datasource_conn, core::DBConn};
-use rag::handler::vectorize_handler::init_vector_db;
+use crate::global::common::log::init_tk_log;
+use crate::global::common::yaml::{load_env_yaml, GlobalEnv};
+use crate::global::db::core::DBConn;
+use crate::global::db::init_datasource_conn;
 
 #[macro_use] extern crate lazy_static;
 lazy_static! {
@@ -24,16 +24,6 @@ async fn main() -> std::io::Result<()> {
     if let Ok(mysql_url) = std::env::var("MYSQL_URL") {
         let db_conn = init_datasource_conn(&mysql_url).await.expect("datasource init error");
         G_DB.set(db_conn).unwrap();
-        
-        // 实时数据
-        // realtime::init_mysql_binlog_listener(&mysql_url);
-        
-        // 向量数据库 - 在单独的线程中执行
-        let db_conn = G_DB.get().unwrap().clone();
-        tokio::spawn(async move {
-            log::info!("tokio::spawn ... init vector db");
-            init_vector_db(&db_conn).await;
-        });
     } else {
         log::error!("MYSQL_URL not set");
         std::process::exit(-11);

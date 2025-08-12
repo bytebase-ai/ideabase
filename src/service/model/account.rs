@@ -1,9 +1,9 @@
 use std::{collections::HashMap, vec};
-use database::core::DBConn;
+use crate::global::db::core::DBConn;
 use serde::Deserialize;
 use sqlx::{Error, Result};
 
-use common::utils::get_next_id;
+use crate::global::common::utils::get_next_id;
 
 pub const IB_SCHEMA_NAME: &str = "ideabase";
 
@@ -181,7 +181,7 @@ impl FromStr for Role {
 
 #[cfg(test)]
 mod tests {
-    use common::log::init_tk_log;
+    use crate::global::common::log::init_tk_log;
     use super::*;
 
     #[tokio::test]

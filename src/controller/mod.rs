@@ -1,9 +1,8 @@
-pub mod ai_rag_controller;
 pub mod rest_controller;
 pub mod account_controller;
 
 use actix_web::{get, http::StatusCode, web, HttpResponse, HttpResponseBuilder, Responder};
-use common::rpc::RpcResult;
+use crate::global::common::rpc::RpcResult;
 
 // 快速返回结果
 pub fn build_rpc_response<T: serde::Serialize>(rpc_result: RpcResult<T>) -> impl Responder {
@@ -37,7 +36,6 @@ pub fn register_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/api/v1")
         .service(account_controller::scope())
         .service(rest_controller::scope())
-        .service(ai_rag_controller::scope()))
     ;
 }
 

@@ -2,16 +2,15 @@ use std::collections::HashMap;
 use actix_web::{get, post, web, Responder};
 use http::StatusCode;
 
-use common::rpc::RpcResult;
-use database::core::{get_table, get_table_name_list};
-use restful::handler::delete::handle_delete;
-use restful::handler::get::handle_get;
-use restful::handler::head::handle_head;
-use restful::handler::post::handle_post;
-use restful::handler::put::handle_put;
+use crate::global::common::rpc::RpcResult;
+use crate::global::db::core::{get_table, get_table_name_list};
+use crate::global::rest::handler::delete::handle_delete;
+use crate::global::rest::handler::get::handle_get;
+use crate::global::rest::handler::head::handle_head;
+use crate::global::rest::handler::post::handle_post;
+use crate::global::rest::handler::put::handle_put;
 use crate::controller::build_rpc_response;
 use crate::G_DB;
-
 
 pub fn scope() -> actix_web::Scope {
     web::scope("/rest").service(curd).service(get_table_names).service(get_table_meta)

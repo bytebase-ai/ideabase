@@ -4,13 +4,13 @@ use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use actix_web::{post, web, Responder};
 
-use common::rpc::RpcResult;
-use common::passwd::hash_passwd;
-use common::date::{format_datetime_ymd_hms, get_cur_local_datetime};
-use common::utils::do_generate_api_key;
+use crate::global::common::rpc::RpcResult;
+use crate::global::common::passwd::hash_passwd;
+use crate::global::common::date::{format_datetime_ymd_hms, get_cur_local_datetime};
+use crate::global::common::utils::do_generate_api_key;
 use crate::controller::build_rpc_response;
 use crate::G_DB;
-use crate::global::jwt::JwtToken;
+use crate::global::common::jwt::JwtToken;
 use crate::service::model::account::{Account, AccountDTO, Role};
 
 pub fn scope() -> actix_web::Scope {
@@ -53,7 +53,7 @@ async fn logon(request_data: web::Json<AccountRequest>) -> impl Responder {
     let role = account.role;
     let hashed_password = account.password;
     // 3. 验证密码
-    if !common::passwd::verify_passwd(&password, &hashed_password) {
+    if !crate::global::common::passwd::verify_passwd(&password, &hashed_password) {
         return build_rpc_response(RpcResult::<serde_json::Value> { code: StatusCode::UNAUTHORIZED, msg: Some("Invalid password".to_string()), payload: None });
     }
 
