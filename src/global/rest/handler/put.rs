@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use http::StatusCode;
+use http::status::StatusCode;
 use crate::global::common::rpc::RpcResult;
 use crate::global::db::core::{is_table_exists, DBConn};
 

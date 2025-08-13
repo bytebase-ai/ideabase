@@ -1,4 +1,4 @@
-use http::StatusCode;
+use http::status::StatusCode;
 
 /// 标准RPC响应结构体
 #[derive(Debug, Clone)]

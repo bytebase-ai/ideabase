@@ -3,13 +3,13 @@ pub mod global;
 pub mod service;
 
 use crate::global::common::log::init_tk_log;
-use crate::global::common::yaml::{load_env_yaml, GlobalEnv};
+use crate::global::common::yaml::{load_global_config, GlobalConfig};
 use crate::global::db::core::DBConn;
 use crate::global::db::init_datasource_conn;
 
 #[macro_use] extern crate lazy_static;
 lazy_static! {
-    pub static ref G_ENV: GlobalEnv = load_env_yaml();
+    pub static ref G_ENV: GlobalConfig = load_global_config();
 }
 
 // 全局数据库连接池

@@ -2,7 +2,7 @@ use fnv::FnvHashMap;
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::collections::{BTreeMap, HashMap, VecDeque};
-use http::StatusCode;
+use http::status::StatusCode;
 use crate::global::rest::db::query_executor::QueryExecutor;
 
 /// 主节点权重常量
@@ -249,7 +249,7 @@ pub fn get_parent_node_path(node_path: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::global::common::json::json_to_json_value;
+    use crate::global::common::json::parse_to_json_value;
     use crate::global::common::utils::serde_json_map_to_hashmap;
     use crate::global::rest::db::query_context::QueryContext;
 
@@ -273,7 +273,7 @@ mod tests {
     }
     "#;
 
-        let v = json_to_json_value(json_str);
+        let v = parse_to_json_value(json_str);
         let ctx = QueryContext::from_json(serde_json_map_to_hashmap(v.as_object().unwrap()));
         for (k, v) in &ctx.layer_query_node {
             println!("{}: {:?}", k, v);

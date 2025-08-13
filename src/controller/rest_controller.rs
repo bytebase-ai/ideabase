@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use actix_web::{get, post, web, Responder};
-use http::StatusCode;
+use http::status::StatusCode;
 
 use crate::global::common::rpc::RpcResult;
 use crate::global::db::core::{get_table, get_table_name_list};

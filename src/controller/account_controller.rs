@@ -1,13 +1,13 @@
 use regex::Regex;
-use http::StatusCode;
+use http::status::StatusCode;
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use actix_web::{post, web, Responder};
 
 use crate::global::common::rpc::RpcResult;
 use crate::global::common::passwd::hash_passwd;
-use crate::global::common::date::{format_datetime_ymd_hms, get_cur_local_datetime};
-use crate::global::common::utils::do_generate_api_key;
+use crate::global::common::date::{format_datetime, now};
+use crate::global::common::utils::generate_secure_api_key;
 use crate::controller::build_rpc_response;
 use crate::G_DB;
 use crate::global::common::jwt::JwtToken;
@@ -68,7 +68,7 @@ async fn logon(request_data: web::Json<AccountRequest>) -> impl Responder {
 
     // 5. 更新最后登录时间 (可选，但推荐)
     let update_dto = AccountDTO {
-        last_sign_in_at: Some(format_datetime_ymd_hms(get_cur_local_datetime())),
+        last_sign_in_at: Some(format_datetime(now())),
         email: None, password: None, role: None, api_key: None, email_confirmed_at: None, gmt_create: None, gmt_update: None,
     };
     if let Err(err) = Account::update(db_conn, account_id, &update_dto).await {
@@ -167,7 +167,7 @@ async fn generate_api_key(token: JwtToken) -> impl Responder {
     // 检查用户是否存在
     match Account::fetch_by_id(db_conn, account_id).await {
         Ok(_) => {
-            let api_key = do_generate_api_key(account_id);
+            let api_key = generate_secure_api_key(account_id);
             let update_dto = AccountDTO { api_key: Some((&api_key).to_string()) ,
                 email: None, password: None, role: None, email_confirmed_at: None, last_sign_in_at: None, gmt_create: None, gmt_update: None
             };

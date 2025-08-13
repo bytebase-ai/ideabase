@@ -37,14 +37,27 @@ pub fn serde_json_map_to_hashmap(map: &serde_json::Map<String, serde_json::Value
     map.iter().map(|(k, v)| (k.clone(), v.clone())).collect()
 }
 
-// 生成安全的API Key
-pub fn do_generate_api_key(id: i64) -> String {
-    let hex_id = hex_shuffle(id);
+/// 生成安全的 API Key
+///
+/// # 参数
+/// - `id`: 用户或实体的唯一标识符，类型为 `i64`
+///
+/// # 返回值
+/// 返回一个格式为 `HEXID_UUID` 的大写字符串，其中 `HEXID` 是经过乱序处理的十六进制 ID，`UUID` 是去除连字符的 UUIDv7
+pub fn generate_secure_api_key(id: i64) -> String {
+    let hex_id = shuffle_hex_string(id);
     let uuid = uuid7::uuid7().to_string().replace("-", "");
     format!("{}_{}", hex_id, uuid).to_uppercase()
 }
 
-pub fn hex_shuffle(id: i64) -> String {
+/// 对输入的 `i64` 值进行十六进制乱序处理
+///
+/// # 参数
+/// - `id`: 需要乱序处理的 `i64` 值
+///
+/// # 返回值
+/// 返回一个乱序后的十六进制字符串
+pub fn shuffle_hex_string(id: i64) -> String {
     // 将i64转换为16进制字符串
     let hex_string = format!("{:x}", id);
     
@@ -63,11 +76,11 @@ pub fn hex_shuffle(id: i64) -> String {
 
 #[cfg(test)]
 mod tests {
-    use crate::global::common::utils::do_generate_api_key;
+    use crate::global::common::utils::generate_secure_api_key;
 
     #[test]
     fn test_generate_secure_api_key() {
-        let api_key = do_generate_api_key(11111i64);
+        let api_key = generate_secure_api_key(11111i64);
         println!("{}", api_key);
     }
 }

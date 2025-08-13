@@ -36,7 +36,7 @@ pub fn register_routes(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/api/v1")
         .service(account_controller::scope())
         .service(rest_controller::scope())
-    ;
+    );
 }
 
 #[get("/health")]
